@@ -11,6 +11,7 @@ def read_json_file(file_path):
         print(f"Error: Failed to decode JSON from the file {file_path}.")
     return data
 
+# AFD Funciones
 def transition(q,a,d):
     key = "("+q+","+a+")"
     return d[key]
@@ -36,8 +37,7 @@ def derivation(q,w,d):
     else:
         return q
 
-    
-# Menu printing
+# Menu Printing and defensive programming for option selection
 def print_menu():
     print("Seleccionar funcion:")
     print("1. Transicion")
@@ -56,26 +56,28 @@ def print_menu():
     return opt
     
 # Switch case for options
-def handle_option(opt, F, D):
-    q = input("q (estado inicial): ")
+def handle_option(opt, F, D, q0):
     try:
         if opt==1: # Transition
+            q = input("q (estado inicial): ")
             a = input("a (arista de transición): ")
             rslt = transition(q,a,D)
         if opt==2: # Final state
+            q = input("q (estado inicial): ")
             w = input("w (cadena): ")
             rslt = final_state(q,w,D)
         if opt==3: # Accepted state
             w = input("w (cadena): ")
-            rslt = accepted(q, w, D, F)
+            rslt = accepted(q0[0], w, D, F)
         if opt==4: # Derivation
+            q = input("q (estado inicial): ")
             w = input("w (cadena): ")
             rslt = derivation(q,w,D)
         print("R// "+str(rslt)+"\n")
     except:
         print("Hubo un error\n")
 
-    
+
 def main():
     # Loading json file for the automata
     afd = input("Ingresar nombre del archivo .json para el AFD: \n")
@@ -93,6 +95,6 @@ def main():
     while opt!=5:
         opt = print_menu()
         if opt!=0 and opt!=5:
-            handle_option(opt, F, D)
+            handle_option(opt, F, D, q0)
 
 main()
